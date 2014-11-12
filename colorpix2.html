@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    width:560px;
+    margin:10px;
+    font:normal 14px Arial, Helvetica, sans-serif;
+    padding:10px 10px;
+    background:#abc;
+    color:#000;
+    }
+article {
+    padding:10px 0 10px 32px;
+}
+article header { margin:0; }
+article footer {
+    padding:0 3px;
+    color:#999;
+}
+article footer p, article footer div {
+    padding-bottom:0;
+    font-size:12px;
+}
+article footer div p {
+    float:right;
+    width:50%;
+    text-align:right;
+}
+article footer a { color:#999; }
+article footer a:hover {
+    color:#0481b5;
+}
+    article {display: block; border: 3px solid red}
+</style>
+<script>document.createElement("article");</script>
+</head>
+    <script src="https://www.google.com/jsapi?key=ABQIAAAASwobyO98ESqydSlxE2bvVhTf_-V6BmIULGB2bfjQkabXCR16xRTSLNJNztKkceAuPYL-MF_4E6ZI0g"></script>
+    <script type="text/javascript">
+
+      google.load('search', '1');
+
+      var imageSearch;
+
+      function addPaginationLinks() {
+      
+        // To paginate search results, use the cursor function.
+        var cursor = imageSearch.cursor;
+        var curPage = cursor.currentPageIndex; // check what page the app is on
+        var pagesDiv = document.createElement('div');
+        for (var i = 0; i < cursor.pages.length; i++) {
+          var page = cursor.pages[i];
+          if (curPage == i) { 
+
+          // If we are on the current page, then don't make a link.
+            var label = document.createTextNode(' ' + page.label + ' ');
+            pagesDiv.appendChild(label);
+          } else {
+
+            // Create links to other pages using gotoPage() on the searcher.
+            var link = document.createElement('a');
+            link.href = 'javascript:imageSearch.gotoPage('+i+');';
+            link.innerHTML = page.label;
+            link.style.marginRight = '2px';
+            pagesDiv.appendChild(link);
+          }
+        }
+
+        var contentDiv = document.getElementById('content');
+        contentDiv.appendChild(pagesDiv);
+      }
+
+      function searchComplete() {
+
+        // Check that we got results
+        if (imageSearch.results && imageSearch.results.length > 0) {
+
+          // Grab our content div, clear it.
+          var contentDiv = document.getElementById('content');
+          contentDiv.innerHTML = '';
+
+          // Loop through our results, printing them to the page.
+          var results = imageSearch.results;
+          for (var i = 0; i < results.length; i++) {
+            // For each result write it's title and image to the screen
+            var result = results[i];
+            var imgContainer = document.createElement('div');
+            var title = document.createElement('div');
+            
+            // We use titleNoFormatting so that no HTML tags are left in the 
+            // title
+            title.innerHTML = result.titleNoFormatting;
+            var newImg = document.createElement('img');
+
+            // There is also a result.url property which has the escaped version
+            newImg.src = result.tbUrl;
+            // imgContainer.appendChild(title);
+            imgContainer.appendChild(newImg);
+
+            // Put our title + image in the content
+            contentDiv.appendChild(imgContainer);
+          }
+
+          // Now add links to additional pages of search results.
+          addPaginationLinks(imageSearch);
+        }
+      }
+
+      function OnLoad() {
+      
+        // Create an Image Search instance.
+        imageSearch = new google.search.ImageSearch();
+
+        // Set searchComplete as the callback function when a search is 
+        // complete.  The imageSearch object will have results in it.
+        imageSearch.setSearchCompleteCallback(this, searchComplete, null);
+
+        // Find me a beautiful car.
+        imageSearch.execute("RED TRAIN");
+        
+        // Include the required Google branding
+        google.search.Search.getBranding('branding');
+      }
+      google.setOnLoadCallback(OnLoad);
+    </script>
+<script>
+var myCanvas123;
+var myContext123
+var initletterxpos = 10;
+var letterypos = 30;
+var letterxskip = 15;
+var letteriskip = 8;
+var query = "";
+var titlelt; 
+
+function setupColorPix() {
+  titlelt = document.getElementById('titlelt');
+  letterxpos = initletterxpos;
+  myCanvas123 = document.getElementById("canvas");
+  myContext123 = myCanvas123.getContext("2d");
+  document.addEventListener("keydown", keyhit, false);
+  myContext123.font = "bold 24px sans-serif";
+  myContext123.fillStyle="rgb(100,200,50)";
+  myContext123.fillRect(0,0,500,50);
+  myContext123.fillStyle="rgb(0,0,0)";
+}
+
+function keyhit(e) {
+  var code;
+  if (!e) var e = window.event;
+  if (e.keyCode) code = e.keyCode;
+  else if (e.which) code = e.which;
+  var character = String.fromCharCode(code);
+  myContext123.fillText(character, letterxpos, letterypos);
+  if (character == "I")
+     {letterxpos=letterxpos+letteriskip;}
+     else 
+     {letterxpos=letterxpos+letterxskip;}
+  if (code == 13) 
+     {draw_block();}
+     else 
+     {query=query+character;}
+  window.scroll(0,0);
+}
+
+function draw_block() {
+  myContext123.fillStyle="rgb(100,200,50)";
+  myContext123.fillRect(0,0,500,50);
+  myContext123.fillStyle="rgb(0,0,0)";
+  titlelt.innerHTML = query;
+  imageSearch.execute(query);
+  query="";
+  letterxpos = initletterxpos;
+  window.scroll(0,0);
+}
+
+google.setOnLoadCallback(OnLoad);
+
+
+</script>
+<body onload="setupColorPix()">
+<article>
+<h1><div id="titlelt">RED TRAIN</div></h1>
+<div id="content">Loading...</div>
+<p><span></span></p>
+<canvas id="canvas" width="500" height="500" onclick="draw_block();return false"></canvas>
+<div id="branding" style="float: left;"></div><br />
+</article>
+</body>
+</html>
